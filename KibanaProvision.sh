@@ -9,4 +9,4 @@ echo "server.port: 5601">>./config/kibana.yml
 echo "elasticsearch.hosts: \"https://192.168.22.11:9200\"">>./config/kibana.yml
 echo "elasticsearch.serviceAccountToken: \"$token\"">>./config/kibana.yml
 echo "elasticsearch.ssl.verificationMode: \"none\"">>./config/kibana.yml
-./bin/kibana
+./bin/kibana &
