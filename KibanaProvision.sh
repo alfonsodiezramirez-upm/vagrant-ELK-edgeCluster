@@ -1,12 +1,14 @@
-curl -O https://artifacts.elastic.co/downloads/kibana/kibana-8.5.2-linux-x86_64.tar.gz
-curl https://artifacts.elastic.co/downloads/kibana/kibana-8.5.2-linux-x86_64.tar.gz.sha512 | shasum -a 512 -c - 
-tar -xzf kibana-8.5.2-linux-x86_64.tar.gz
-mv kibana-8.5.2 kibana
-cd kibana/
+wget -qO - https://artifacts.elastic.co/GPG-KEY-elasticsearch | sudo gpg --dearmor -o /usr/share/keyrings/elasticsearch-keyring.gpg
+sudo apt-get update
+sudo apt-get install apt-transport-https
+echo "deb [signed-by=/usr/share/keyrings/elasticsearch-keyring.gpg] https://artifacts.elastic.co/packages/8.x/apt stable main" | sudo tee /etc/apt/sources.list.d/elastic-8.x.list
+sudo apt-get update && sudo apt-get install kibana=8.5.3 -y
 token=$(cat /sharedData/token)
-echo "server.host: \"192.168.22.12\"">./config/kibana.yml
-echo "server.port: 5601">>./config/kibana.yml
-echo "elasticsearch.hosts: \"https://192.168.22.11:9200\"">>./config/kibana.yml
-echo "elasticsearch.serviceAccountToken: \"$token\"">>./config/kibana.yml
-echo "elasticsearch.ssl.verificationMode: \"none\"">>./config/kibana.yml
-./bin/kibana &
+sudo echo "server.host: \"192.168.22.12\"">/etc/kibana/kibana.yml
+sudo echo "server.port: 5601">>/etc/kibana/kibana.yml
+sudo echo "elasticsearch.hosts: \"https://192.168.22.11:9200\"">>/etc/kibana/kibana.yml
+sudo echo "elasticsearch.serviceAccountToken: \"$token\"">>/etc/kibana/kibana.yml
+sudo echo "elasticsearch.ssl.verificationMode: \"none\"">>/etc/kibana/kibana.yml
+sudo /bin/systemctl daemon-reload
+sudo /bin/systemctl enable kibana.service
+sudo systemctl start kibana.service

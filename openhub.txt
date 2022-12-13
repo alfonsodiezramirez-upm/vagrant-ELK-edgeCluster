@@ -1,0 +1,41 @@
+
+1- Instalar openjdk:
+	sudo apt update
+	sudo apt install default-jdk
+		comprobar con java -version
+2- instalamos openhab:
+	wget -qO - 'https://openhab.jfrog.io/artifactory/api/gpg/key/public' | sudo apt-key add -
+	sudo apt-get install apt-transport-https
+	echo 'deb https://openhab.jfrog.io/artifactory/openhab-linuxpkg stable main' | sudo tee /etc/apt/sources.list.d/openhab.list
+	sudo apt-get update
+	sudo apt-get install openhab
+	instalamos los add-ons si vamos a desconectar el sistema de internet:
+		sudo apt-get install openhab-addons
+		
+3- Revisamos que se haya lanzado:
+	sudo systemctl start openhab.service
+	sudo systemctl status openhab.service
+
+	sudo systemctl daemon-reload
+	sudo systemctl enable openhab.service
+
+4- Revisamos en que puerto se ha expuesto:
+	sudo lsof -i -P -n | grep LISTEN
+	
+5- Una vez instalado accedemos a traves del navegador, configuramos usuario y add-ons, habilitamos en aws los puertos 8080 y 8443
+
+6- vamos a la pestaña de de configuración para añadir cosas
+
+7- añadimos un broker mqtt: 13.59.37.99 
+
+8- añadimos una cosa mqtt y le configuramos un canal de tipo texto, poniendo el tópico como mqtt/alfonsodiez
+
+9- en la configuración del canal le añadimos un link a un objeto string predeterminado.
+
+10- Si el valor no se actualiza crear un canal a nivel MQTT broker
+
+11- añadir al dashboard un tipo label
+
+12- vamos a configuración>System Services>API Security y habilitamos basic auth
+
+13- ya en la app cambiamos la vista por defecto a openhab 3 UI
