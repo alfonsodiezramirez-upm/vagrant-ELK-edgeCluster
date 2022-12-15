@@ -34,5 +34,27 @@ Vagrant.configure("2") do |config|
 		mosquitto.vm.provision "shell", path: "mosquittoProvision.sh"
 		mosquitto.vm.provision "shell", path: "beatstologstashProvision.sh"
 	end
-
+	#Configuramos la MV de K3S que hará de master:
+	config.vm.define "kubemaster" do |kubemaster|
+		kubemaster.vm.box = "ubuntu/xenial64"
+		kubemaster.vm.network "private_network", ip: "192.168.22.30"
+		kubemaster.vm.synced_folder "./shared/", "/sharedData"
+		kubemaster.vm.provision "shell", privileged: false, path: "masterNode.sh"
+	end
+	#Configuramos la MV de K3S que hará de primer worker:
+	config.vm.define "kubeworker1" do |kubeworker1|
+		kubeworker1.vm.box = "ubuntu/xenial64"
+		kubeworker1.vm.hostname = "node1"
+		kubeworker1.vm.network "private_network", ip: "192.168.22.31"
+		kubeworker1.vm.synced_folder "./shared/", "/sharedData"
+		kubeworker1.vm.provision "shell", privileged: false, path: "workerNode.sh"
+	end
+	#Configuramos la MV de K3S que hará de segundovaga worker:
+	config.vm.define "kubeworker2" do |kubeworker2|
+		kubeworker2.vm.box = "ubuntu/xenial64"
+		kubeworker2.vm.hostname = "node2"
+		kubeworker2.vm.network "private_network", ip: "192.168.22.32"
+		kubeworker2.vm.synced_folder "./shared/", "/sharedData"
+		kubeworker2.vm.provision "shell", privileged: false, path: "workerNode.sh"
+	end
 end
