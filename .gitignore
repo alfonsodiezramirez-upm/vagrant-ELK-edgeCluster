@@ -1,3 +1,4 @@
-shared
+shared/admin
+shared/token
 .vagrant
 *-console.log

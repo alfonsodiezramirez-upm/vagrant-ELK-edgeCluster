@@ -2,6 +2,7 @@ Vagrant.configure("2") do |config|
 	#Configuramos la MV de Elastic:
 	config.vm.define "elastic" do |elastic|
 		elastic.vm.box = "ubuntu/xenial64"
+		#Definimos una ip dentro de 
 		elastic.vm.network "private_network", ip: "192.168.22.11"
 		#Mapeamos el puerto 9200 de la maquina virtual con el 9200 del host y asignamos ip en red privada, aunque no es necesario puesto que al ser una subred se tiene acceso desde la maquina host a traves de la IP
 		elastic.vm.network :forwarded_port, guest: 9200, host: 9200
