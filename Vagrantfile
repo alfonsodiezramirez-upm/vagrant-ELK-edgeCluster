@@ -49,7 +49,7 @@ Vagrant.configure("2") do |config|
 		kubeworker1.vm.synced_folder "./shared/", "/sharedData"
 		kubeworker1.vm.provision "shell", privileged: false, path: "workerNode.sh"
 	end
-	#Configuramos la MV de K3S que hará de segundovaga worker:
+	#Configuramos la MV de K3S que hará de segundo worker:
 	config.vm.define "kubeworker2" do |kubeworker2|
 		kubeworker2.vm.box = "ubuntu/xenial64"
 		kubeworker2.vm.hostname = "node2"
