@@ -7,3 +7,10 @@ filebeat.inputs:
   qos: 2
 output.logstash:
   hosts: ["192.168.22.13:5044"]
+logging.level: info
+logging.to_files: true
+logging.files:
+  path: /var/log/filebeat
+  name: filebeat
+  keepfiles: 7
+  permissions: 0640
