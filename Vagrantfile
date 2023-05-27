@@ -20,6 +20,10 @@ Vagrant.configure("2") do |config|
 	#Configuramos la MV de Logstash:
 	config.vm.define "logstash" do |logstash|
 		logstash.vm.box = "ubuntu/xenial64"
+		logstash.vm.provider "virtualbox" do |vb|
+            vb.memory = "2048"
+			vb.cpus = 2
+		end
 		logstash.vm.network "private_network", ip: "192.168.22.13"
 		logstash.vm.network :forwarded_port, guest: 5044, host: 5044
 		logstash.vm.synced_folder "./shared/", "/sharedData"
@@ -37,6 +41,8 @@ Vagrant.configure("2") do |config|
 	#Configuramos la MV de K3S que hará de master:
 	config.vm.define "kubemaster" do |kubemaster|
 		kubemaster.vm.box = "ubuntu/xenial64"
+		kubemaster.vm.network "forwarded_port", guest: 6443, host: 6443
+		kubemaster.vm.network "forwarded_port", guest: 8001, host: 8001
 		kubemaster.vm.network "private_network", ip: "192.168.22.30"
 		kubemaster.vm.synced_folder "./shared/", "/sharedData"
 		kubemaster.vm.provision "shell", privileged: false, path: "masterNode.sh"

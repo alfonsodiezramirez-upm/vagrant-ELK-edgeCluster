@@ -1,9 +1,9 @@
 filebeat.inputs:
 - type: mqtt
   hosts: 
-    - tcp://localhost:1883
-    - ssl://localhost:8883
+    - 'tcp://localhost:1883'
   topics: 
-    - edge/#
+    - 'dispositivos/#'
+  qos: 2
 output.logstash:
   hosts: ["192.168.22.13:5044"]
