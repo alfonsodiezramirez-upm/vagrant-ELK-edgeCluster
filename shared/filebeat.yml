@@ -6,16 +6,10 @@ filebeat.inputs:
     - dispositivos/#
   qos: 2
   client_id: filebeat_mqtt
-  enabled: true
-  fields_under_root: true
-  index: 'sensor-data-%{+yyyy-MM-dd}'
-output.elasticsearch:
-  hosts: ["https://192.168.22.11:9200"]
-  username: "elastic"
-  password: "#PASSWORD#" 
-  allow_older_versions: true
-  ssl:
-    verification_mode: none
+output.logstash:
+  hosts: ["192.168.22.13:5044"]
+  ttl: 120
+  pipelining: 0
 logging.level: info
 logging.to_files: true
 logging.files:
