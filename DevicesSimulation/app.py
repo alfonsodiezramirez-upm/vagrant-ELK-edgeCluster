@@ -48,7 +48,7 @@ with open("./weather_madrid_LEMD_1997_2015.csv", "r") as csv_file:
             "maxWind":max(0,int(row[16])+windModification),
             "meanWind":max(0,int(row[17])+windModification),
             "isEnable": 1,
-            "timestamp": datetime_object.strftime("%Y-%m-%dT%H:%M:SZ")
+            "timestamp": datetime_object.strftime("%Y-%m-%dT%H:%M:%SZ")
         }  
 
         # Convertir el diccionario a formato JSON
