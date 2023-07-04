@@ -60,5 +60,5 @@ with open("./weather_madrid_LEMD_1997_2015.csv", "r") as csv_file:
         client.publish(topic, message_json)
         print(message_json + " on topic "+ topic)
         # Esperamos 60 segundos para no bombardear al broker
-        time.sleep(60)
+        time.sleep(10)
     
