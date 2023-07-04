@@ -1,0 +1,46 @@
+#!groovy
+pipeline {
+  agent none
+  stages {
+    stage('checkout') {
+	  agent any
+      steps {
+            git branch: 'main',
+            url: 'https://github.com/alfonsodiezramirez-upm/vagrant-ELK-edgeCluster.git'
+            sh "ls -lat"
+        }
+    }
+    stage('Docker Build') {
+        agent any
+        steps {
+			sh "cd ./DevicesSimulation"
+            sh "docker build -t alfonsoiot/devices-tfm:latest ./DevicesSimulation"
+      }
+    }
+	stage('Docker Push') {
+        agent any
+        steps {
+            withCredentials([usernamePassword(credentialsId: 'dockerhub', passwordVariable: 'dockerHubPassword', usernameVariable: 'dockerHubUser')]) {
+                sh "docker login -u ${env.dockerHubUser} -p ${env.dockerHubPassword}"
+                sh "docker push alfonsoiot/devices-tfm:latest"
+            }
+        }
+    }
+	stage('Deploy pro') {
+        agent any
+        steps {
+                sshagent(credentials : ['kubemaster']) {
+                    echo "deploying"
+                    withCredentials([sshUserPrivateKey(credentialsId: 'kubemaster', keyFileVariable: 'identity', passphraseVariable: '', usernameVariable: 'userName')]){
+						sh "ssh-keygen -f '/var/lib/jenkins/.ssh/known_hosts' -R '192.168.22.30' || true" 
+						sh "ssh ${env.userName}@192.168.22.30 -o StrictHostKeyChecking=no 'kubectl delete deployments devices' || true" 
+
+						sh "ssh ${env.userName}@192.168.22.30 -o StrictHostKeyChecking=no 'kubectl create deployment --image=alfonsoiot/devices-tfm:latest devices'"
+						sh "ssh ${env.userName}@192.168.22.30 -o StrictHostKeyChecking=no 'kubectl scale --replicas=3 deployment/devices'"
+                    }
+                }
+        
+      }
+    }
+  }
+}

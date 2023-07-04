@@ -1,4 +1,20 @@
 Vagrant.configure("2") do |config|
+	config.ssh.forward_agent = true
+	config.vm.define "jenkins" do |jenkins|
+		jenkins.vm.box = "ubuntu/focal64"
+		jenkins.vm.hostname = "jenkins"
+		jenkins.vm.provider "virtualbox" do |jen|
+			jen.gui = false
+			jen.cpus = 2
+			jen.memory = "4096"
+		end
+		jenkins.vm.network "private_network", ip: "192.168.22.40"
+		jenkins.vm.network "forwarded_port", guest: 2376, host: 2376
+		jenkins.vm.network "forwarded_port", guest: 8080, host: 8080
+		jenkins.vm.network "forwarded_port", guest: 50000, host: 50000
+		jenkins.vm.synced_folder "./shared/", "/sharedData"
+		jenkins.vm.provision "shell", path: "jenkins2.sh"
+	end
 	#Configuramos la MV de Elastic:
 	config.vm.define "elastic" do |elastic|
 		elastic.vm.box = "ubuntu/xenial64"
@@ -61,4 +77,5 @@ Vagrant.configure("2") do |config|
 		kubeworker2.vm.synced_folder "./shared/", "/sharedData"
 		kubeworker2.vm.provision "shell", privileged: false, path: "workerNode.sh"
 	end
+	
 end
