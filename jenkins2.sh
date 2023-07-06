@@ -43,3 +43,4 @@ sleep 1m
 
 
 cp /var/lib/jenkins/secrets/initialAdminPassword /sharedData/jenkinsadmin
+sudo service jenkins restart
