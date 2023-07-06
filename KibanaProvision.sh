@@ -12,3 +12,8 @@ sudo echo "elasticsearch.ssl.verificationMode: \"none\"">>/etc/kibana/kibana.yml
 sudo /bin/systemctl daemon-reload
 sudo /bin/systemctl enable kibana.service
 sudo systemctl start kibana.service
+
+sleep 120
+
+#Cargamos el dashboard y sus dependencias mediante curl, para disponer de ello desde el arranque
+curl --location --request POST '192.168.22.12:5601/api/kibana/dashboards/import?force=True' --header 'kbn-xsrf: reporting' --header 'Authorization: Basic ZWxhc3RpYzp6aXlZM1UtZ3JSR2NMREE0SW5lUg==' --header 'Content-Type: application/json' -d @/sharedData/kibana/dashboardanddependencies.json
