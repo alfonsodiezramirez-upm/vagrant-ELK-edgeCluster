@@ -15,5 +15,6 @@ sudo systemctl start kibana.service
 
 sleep 120
 
-#Cargamos el dashboard y sus dependencias mediante curl, para disponer de ello desde el arranque
-curl --location --request POST '192.168.22.12:5601/api/kibana/dashboards/import?force=True' --header 'kbn-xsrf: reporting' --header 'Authorization: Basic ZWxhc3RpYzp6aXlZM1UtZ3JSR2NMREE0SW5lUg==' --header 'Content-Type: application/json' -d @/sharedData/kibana/dashboardanddependencies.json
+#Cargamos el dashboard y sus dependencias mediante curl, para disponer de ello desde el arranque, si lo cambiamos, deberemos exportar el dashboard utilizando el curl curl GET 192.168.22.12:5601/api/kibana/dashboards/export?dashboard=15393120-1ab0-11ee-85ef-d37137d9859b
+admin=$(cat /sharedData/admin)
+curl --location --request POST '192.168.22.12:5601/api/kibana/dashboards/import?force=True' --header 'kbn-xsrf: reporting'  --user "elastic:$admin" --header 'Content-Type: application/json' -d @/sharedData/kibana/dashboardanddependencies.json

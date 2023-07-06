@@ -30,35 +30,36 @@ client = mqtt.Client()
 client.on_connect = on_connect
 client.on_publish = on_publish
 #Bucle recorriendo el fichero para leer los datos del csv, variandolos y enviadolos a MQTT
-with open("./weather_madrid_LEMD_1997_2015.csv", "r") as csv_file:
-    reader = csv.reader(csv_file)
-    for row in reader:
-        datetime_object = datetime.strptime(row[0], '%Y-%m-%d')
-        tempModification = random.randint(-5, 5)
-        humModification = random.randint(-10, 10)
-        windModification = random.randint(-10, 10)
-        message = {
-            "deviceId": str(deviceId),
-            "maxTemperature": int(row[1])+tempModification,
-            "meanTemperature":int(row[2])+tempModification,
-            "minTemperature":int(row[3])+tempModification,
-            "maxHumidity":max(0,min(100,int(row[7])+humModification)),
-            "meanHumidity":max(0,min(100,int(row[8])+humModification)),
-            "minHumidity":max(0,min(100,int(row[9])+humModification)),
-            "maxWind":max(0,int(row[16])+windModification),
-            "meanWind":max(0,int(row[17])+windModification),
-            "isEnable": 1,
-            "timestamp": datetime_object.strftime("%Y-%m-%dT%H:%M:%SZ")
-        }  
+while True:
+    with open("./weather_madrid_LEMD_1997_2015.csv", "r") as csv_file:
+        reader = csv.reader(csv_file)
+        for row in reader:
+            datetime_object = datetime.strptime(row[0], '%Y-%m-%d')
+            tempModification = random.randint(-5, 5)
+            humModification = random.randint(-10, 10)
+            windModification = random.randint(-10, 10)
+            message = {
+                "deviceId": str(deviceId),
+                "maxTemperature": int(row[1])+tempModification,
+                "meanTemperature":int(row[2])+tempModification,
+                "minTemperature":int(row[3])+tempModification,
+                "maxHumidity":max(0,min(100,int(row[7])+humModification)),
+                "meanHumidity":max(0,min(100,int(row[8])+humModification)),
+                "minHumidity":max(0,min(100,int(row[9])+humModification)),
+                "maxWind":max(0,int(row[16])+windModification),
+                "meanWind":max(0,int(row[17])+windModification),
+                "isEnable": 1,
+                "timestamp": datetime_object.strftime("%Y-%m-%dT%H:%M:%SZ")
+            }  
 
-        # Convertir el diccionario a formato JSON
-        message_json = json.dumps(message)
-        # Conectamos al broker MQTT con tiempo de conexión de 30 segundos
-        client.connect(broker, port, keepalive=60)
+            # Convertir el diccionario a formato JSON
+            message_json = json.dumps(message)
+            # Conectamos al broker MQTT con tiempo de conexión de 30 segundos
+            client.connect(broker, port, keepalive=60)
 
-        # Publicamos el mensaje en el topic MQTT
-        client.publish(topic, message_json)
-        print(message_json + " on topic "+ topic)
-        # Esperamos 60 segundos para no bombardear al broker
-        time.sleep(10)
+            # Publicamos el mensaje en el topic MQTT
+            client.publish(topic, message_json)
+            print(message_json + " on topic "+ topic)
+            # Esperamos 10 segundos para no bombardear al broker
+            time.sleep(10)
     
